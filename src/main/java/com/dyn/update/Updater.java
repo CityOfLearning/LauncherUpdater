@@ -2,11 +2,21 @@ package com.dyn.update;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Updater extends Application {
 
@@ -30,15 +41,15 @@ public class Updater extends Application {
 	private static int APP_HEIGHT = 160;
 
 	private static UpdaterProgressMonitor monitor = new UpdaterProgressMonitor();
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	public static void launchApp(File f, UpdaterProgressMonitor progress) {
-		progress.setStatus("Success, Relauching Launcher");
+		/*progress.setStatus("Success, Relauching Launcher");
 		progress.setMax(1);
-		progress.setProgress(1);
+		progress.setProgress(1);*/
 		List<String> launchCommand = new ArrayList<String>();
 		try {
 			launchCommand.add("java");
@@ -46,9 +57,9 @@ public class Updater extends Application {
 			launchCommand.add(f.getCanonicalPath());
 
 			ProcessBuilder pbuild = new ProcessBuilder(launchCommand);
-			pbuild.start();
-
 			Thread.sleep(3000);
+			
+			pbuild.start();
 			System.exit(0);
 
 		} catch (IOException | InterruptedException e) {
@@ -80,11 +91,14 @@ public class Updater extends Application {
 		status.setFont(Font.font("Tahoma", FontWeight.BOLD, 13));
 		grid.add(status, 0, 2, 2, 1);
 
+		
+		
 		ProgressBar bar = new ProgressBar();
 		bar.setOpacity(1);
 		bar.setPrefWidth(270);
-		bar.progressProperty().bind(monitor.getBarProperty());
-		monitor.setMax(10);
+		bar.progressProperty().bind(monitor.getBarProperty());		
+		bar.getStylesheets().add("assets/dyn/updater/striped-progress.css");
+		monitor.setMax(1);
 		monitor.setProgress(1);
 		grid.add(bar, 0, 3, 2, 1);
 
@@ -95,6 +109,7 @@ public class Updater extends Application {
 		grid.setBackground(new Background(myBI));
 
 		Scene scene = new Scene(grid, APP_WIDTH, APP_HEIGHT);
+
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setResizable(false);
@@ -107,16 +122,16 @@ public class Updater extends Application {
 		});
 	}
 
-	public static  void updateApp(UpdaterProgressMonitor progress) {
+	public static void updateApp(UpdaterProgressMonitor progress) {
 		File updatedFile = new File(System.getProperty("user.dir"), "DYN_Minecraft_Launcher.jar");
 		if (updatedFile.exists()) {
 			updatedFile.delete();
 		}
-		progress.setStatus("Downloading updates");
+		//progress.setStatus("Downloading updates");
 		FileUtils.downloadFileWithProgress(
-				"https://github.com/Digital-Youth-Network/MinecraftLauncher/releases/download/2.0/DYN-Minecraft-Launcher-2.0.jar",
+				"https://github.com/Digital-Youth-Network/MinecraftLauncher/releases/download/2.1/DYN-Minecraft-Launcher-2.1.jar",
 				updatedFile, progress);
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
