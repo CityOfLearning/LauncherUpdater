@@ -2,21 +2,11 @@ package com.dyn.update;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -33,7 +23,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Updater extends Application {
 
@@ -124,9 +113,17 @@ public class Updater extends Application {
 
 	public static void updateApp(UpdaterProgressMonitor progress) {
 		File updatedFile = new File(System.getProperty("user.dir"), "DYN_Minecraft_Launcher.jar");
+		
 		if (updatedFile.exists()) {
 			updatedFile.delete();
 		}
+		
+		for(File f : updatedFile.getParentFile().listFiles()){
+			if (f.getName().toLowerCase().contains("dyn") && f.getName().toLowerCase().contains("launcher") && f.getName().contains("jar")) {
+				f.delete();
+			}
+		}
+		
 		//progress.setStatus("Downloading updates");
 		FileUtils.downloadFileWithProgress(
 				"https://github.com/Digital-Youth-Network/MinecraftLauncher/releases/download/2.1/DYN-Minecraft-Launcher-2.1.jar",
