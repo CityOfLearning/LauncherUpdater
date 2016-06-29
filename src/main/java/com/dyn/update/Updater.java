@@ -126,7 +126,7 @@ public class Updater extends Application {
 		
 		//progress.setStatus("Downloading updates");
 		FileUtils.downloadFileWithProgress(
-				"https://github.com/Digital-Youth-Network/MinecraftLauncher/releases/download/2.1/DYN-Minecraft-Launcher-2.1.jar",
+				"https://github.com/CityOfLearning/MinecraftLauncher/releases/download/2.1/DYN-Minecraft-Launcher-2.1.jar",
 				updatedFile, progress);
 
 		Platform.runLater(new Runnable() {
